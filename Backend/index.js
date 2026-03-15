@@ -1,23 +1,36 @@
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
 
-main()
-    .then(()=>{
-        console.log("Connection Successful");
-    })
-    .catch((err) => {
-        console.log(err);
-    })
+const app = express();
+
+const authRoutes = require("./routes/authRoutes");
+const requestRoutes = require("./routes/requestRoutes");
+
+app.use(express.json());
+
+app.use("/auth", authRoutes);
+app.use("/requests", requestRoutes);
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/ProjectManagementSystem');
+    await mongoose.connect("mongodb://127.0.0.1:27017/ProjectManagementSystem");
 }
 
-app.get("/api" , (req,res) => {
-    res.json({"users" : ["Userone","Usertwo","userthree"]});
+main()
+.then(() => {
+    console.log("Connection Successful");
+})
+.catch((err) => {
+    console.log(err);
 });
 
-app.listen(8080,() =>{
-    console.log("server is listning to port 8080");
+app.get("/api", (req, res) => {
+    res.json({
+        users: ["Userone", "Usertwo", "Userthree"]
+    });
+});
+
+app.use("/auth", authRoutes);
+
+app.listen(8080, () => {
+    console.log("server is listening to port 8080");
 });
