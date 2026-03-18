@@ -5,11 +5,14 @@ const app = express();
 
 const authRoutes = require("./routes/authRoutes");
 const requestRoutes = require("./routes/requestRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+
 
 app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/requests", requestRoutes);
+app.use("/projects", projectRoutes);
 
 async function main() {
     await mongoose.connect("mongodb://127.0.0.1:27017/ProjectManagementSystem");
