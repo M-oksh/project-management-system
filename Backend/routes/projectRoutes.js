@@ -131,4 +131,80 @@ router.get("/:projectId", async (req, res) => {
 
 });
 
+const Task = require("../models/Task");
+
+router.get("/progress/:projectId", async (req, res) => {
+
+    try {
+
+        const projectId = req.params.projectId;
+
+        const totalTasks = await Task.countDocuments({ projectId });
+
+        const completedTasks = await Task.countDocuments({
+            projectId,
+            status: "completed"
+        });
+
+        let progress = 0;
+
+        if (totalTasks > 0) {
+            progress = (completedTasks / totalTasks) * 100;
+        }
+
+        res.json({
+            totalTasks,
+            completedTasks,
+            progress: progress.toFixed(2) + "%"
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+
+});
+
+router.put("/remove-member", async (req, res) => {
+
+    try {
+
+        const { projectId, memberId } = req.body;
+
+        const project = await Project.findById(projectId);
+
+        if (!project) {
+            return res.json({
+                message: "Project not found"
+            });
+        }
+
+        project.members = project.members.filter(
+            id => id.toString() !== memberId
+        );
+
+        await project.save();
+
+        res.json({
+            message: "Member removed successfully",
+            project
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+
+});
+
 module.exports = router;
