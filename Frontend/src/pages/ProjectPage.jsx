@@ -121,7 +121,6 @@ function ProjectPage() {
     </div>
 
   );
-
 }
 
 export default ProjectPage;
