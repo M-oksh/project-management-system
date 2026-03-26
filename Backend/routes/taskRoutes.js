@@ -11,14 +11,15 @@ router.post("/create", async (req, res) => {
 
     try {
 
-        const { title, description, projectId, assignedTo, deadline } = req.body;
+        const { title, description, projectId, assignedTo, deadline, priority } = req.body;
 
         const task = new Task({
             title,
             description,
             projectId,
             assignedTo,
-            deadline
+            deadline,
+            priority
         });
 
         await task.save();
